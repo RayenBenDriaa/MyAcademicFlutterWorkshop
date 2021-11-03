@@ -1,37 +1,43 @@
 import 'package:flutter/material.dart';
-import 'details.dart';
-import 'home.dart';
-import 'product_details.dart';
-import 'login.dart';
-import 'home.dart';
-import 'register.dart';
+
+import 'navigation_menus/nav_bottom.dart';
+import 'navigation_menus/nav_tab.dart';
+import 'reset_password.dart';
+import 'signin.dart';
+import 'signup.dart';
+import 'update_user.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class  MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final List <Product> _products= [];
-
-  @override
-Widget build(BuildContext context){
-
-      return MaterialApp(
-      title: "G-store esprit",
-         // home: Login(),
-
-
-      ) ;
-
-
-
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'G-Store ESPRIT',
+      routes: {
+        "/": (BuildContext context) {
+          return const Signin();
+        },
+        "/resetPwd": (BuildContext context) {
+          return const ResetPassword();
+        },
+        "/signup": (BuildContext context) {
+          return const Signup();
+        },
+        "/home/updateUser": (BuildContext context) {
+          return const UpdateUser();
+        },
+        "/navBottom": (BuildContext context) {
+          return const NavigationBottom();
+        },
+        "/home/navTab": (BuildContext context) {
+          return const NavigationTab();
+        }
+      },
+    );
   }
 }
-
