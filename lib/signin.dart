@@ -138,6 +138,18 @@ class _SigninState extends State<Signin> {
                 )
             ),
             Container(
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                  ),
+                  child: const Text("voir la maps"),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, "/maps");
+                  },
+                )
+            ),
+            Container(
               margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
