@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'navigation_menus/map.dart';
 import 'navigation_menus/nav_bottom.dart';
 import 'navigation_menus/nav_tab.dart';
 import 'reset_password.dart';
@@ -36,6 +37,9 @@ class MyApp extends StatelessWidget {
         },
         "/home/navTab": (BuildContext context) {
           return const NavigationTab();
+        },
+        "/maps": (BuildContext context) {
+          return  Maps();
         }
       },
     );
