@@ -1,27 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+class ProductDetails extends StatefulWidget {
+  final String _image;
+  final String _title;
+  final String _description;
+  final int _price;
+  final int _quantity;
 
-class  Product_Details extends StatelessWidget {
-  const Product_Details({Key? key}) : super(key: key);
+  const ProductDetails(
+      this._image, this._title, this._description, this._price, this._quantity, {Key? key}) : super(key: key);
+
+  @override
+  State<ProductDetails> createState() => _ProductDetailsState();
+}
+
+class _ProductDetailsState extends State<ProductDetails> {
+  late int _currentQuantity;
+
+  final String _baseUrl = "10.0.2.2:9090";
+
+  @override
+  void initState() {
+    _currentQuantity = widget._quantity;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(10,0.0,10,40),
-      child: Column(children: [Image.asset("assets/images/dmc5.jpg",width: 350, height: 250,),Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
-        ,  TextButton(
-          child: Text('Buy'),
-          style: TextButton.styleFrom(
-            primary: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget._title),
+      ),
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: Image.network("http://10.0.2.2:9090/img/" + widget._image, width: 460, height: 215)
           ),
+          Container(
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 50),
+            child: Text(widget._description),
+          ),
+          Text(widget._price.toString() + " TND", textScaleFactor: 3),
+          Text("Exemplaires disponibles : " + _currentQuantity.toString()),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+          label: const Text("Acheter", textScaleFactor: 1.5),
+          icon: const Icon(Icons.shopping_basket_rounded),
           onPressed: () {
-            print('Pressed');
-          },
-        )
-      ]
-        ,  )
-      ,
-
+            http.get(Uri.http(_baseUrl, "/library/" + "616d75ced2391777c9be4cad" + "/" + "616d75ced2391777c9be4ca2"))
+                .then((http.Response response) {
+                  if(response.statusCode == 200) {
+                    Map<String, dynamic> countFromServer = json.decode(response.body);
+                    if(int.parse(countFromServer["count"].toString()) != 0) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialog(
+                              title: Text("Information"),
+                              content: Text("Vous possédez déjà ce jeu !"),
+                            );
+                          });
+                    }
+                    else {
+                      Navigator.pop(context);
+                    }
+                  }
+                  else {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const AlertDialog(
+                            title: Text("Information"),
+                            content: Text("Une erreur s'est produite. Veuillez réessayer !"),
+                          );
+                        });
+                  }
+            });
+          }
+      ),
     );
   }
 }
